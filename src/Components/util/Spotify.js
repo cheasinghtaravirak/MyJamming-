@@ -28,29 +28,49 @@ const Spotify = {
           return [];
         } else {
           return jsonResponse.tracks.items.map(track => ({
-            ID: track.id,
-            Name: track.name,
-            Artist: track.artists[0].name,
-            Album: track.album.name,
-            URL: track.uri
+            id: track.id,
+            name: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name,
+            uri: track.uri
           }));
         }
       });
-    }
-    /*savePlaylist(playlistName, trackURLs) {
-      if(!playlistName && trackURLs) {
+    },
+    savePlaylist(playlistName, trackURIs) {
+      if(!playlistName && trackURIs) {
         return;
       } else {
         const accessToken = this.getAccessToken();
-        const headers = {headers: {'Authorization': `Bearer ${accessToken}`}};
+        const headers = {'Authorization': `Bearer ${accessToken}`};
         let userID = '';
-        return fetch();
+        let playlistID = '';
+        return fetch('https://api.spotify.com/v1/me', {
+          headers: headers
+        }).then(response => response.json()).then(jsonResponse => {
+          userID = jsonResponse.id;
+        }).then(() => {
+          return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({name: playlistName})
+          }).then(response =>
+          response.json()).then(jsonResponse => playlistID = jsonResponse.id)
+        }).then(() => {
+          return fetch(`//api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({uris: trackURIs})
+          }).then(response => response.json()).then(jsonResponse => playlistID = jsonResponse.id)
+        });
       }
-    } */ 
+    }
 
 };
-
-
-
-
 export default Spotify;
