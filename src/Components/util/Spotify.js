@@ -64,7 +64,7 @@ const Spotify = {
         }) //Post the track URIs to the newly-created playlist. Referencing the current user's account (ID)
         // and the new playlist (ID) (problem lies here!!!)
         .then(() => {
-          return fetch(`//api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, {
+          return fetch(`https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
               'Content-type': 'application/json'
