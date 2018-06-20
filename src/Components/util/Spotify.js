@@ -45,11 +45,13 @@ const Spotify = {
         const headers = {'Authorization': `Bearer ${accessToken}`};
         let userID = '';
         let playlistID = '';
+        //Get current user's ID
         return fetch('https://api.spotify.com/v1/me', {
           headers: headers
         }).then(response => response.json()).then(jsonResponse => {
           userID = jsonResponse.id;
-        }).then(() => {
+        }) //Post a new playlist with the input name. Receive the playlist ID back from the request
+        .then(() => {
           return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -59,7 +61,9 @@ const Spotify = {
             body: JSON.stringify({name: playlistName})
           }).then(response =>
           response.json()).then(jsonResponse => playlistID = jsonResponse.id)
-        }).then(() => {
+        }) //Post the track URIs to the newly-created playlist. Referencing the current user's account (ID)
+        // and the new playlist (ID) (problem lies here!!!)
+        .then(() => {
           return fetch(`//api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -73,4 +77,7 @@ const Spotify = {
     }
 
 };
+//http://api.spotify.com/v1/users/k15v8l0pa3v0j75nk75pk24mh/playlists/2BOQkN3pWrDDLIArNLSY4Z/tracks
+//My spotify id: k15v8l0pa3v0j75nk75pk24mh
+//playlistID: 2BOQkN3pWrDDLIArNLSY4Z
 export default Spotify;

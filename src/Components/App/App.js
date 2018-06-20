@@ -24,7 +24,11 @@ class App extends Component {
     if (this.state.playlistTracks.find(savedTrack => savedTrack.id === track.id)) {
       return;
     } else {
-      this.setState({playlistTracks: [this.state.playlistTracks, track]});
+
+      //this.setState({playlistTracks: [this.state.playlistTracks, track]}); (working but show only for one)
+      //this.setState({playlistTracks: this.state.playlistTracks.push(track)}); (not working)
+      this.setState({ playlistTracks: this.state.playlistTracks.concat(track) }); //working !!!
+      //New problem: how to see the saved music in my Spotify playlist?
     }
   }
   removeTrack(track) {
@@ -36,7 +40,7 @@ class App extends Component {
   }
   savePlaylist() {
     const trackURIs = this.state.playlistTracks.map(track => track.uri);
-    Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
+    Spotify.savePlaylist(this.state.playlistName, trackURIs).then(response => {
       this.setState({
         playlistName: 'New Playlist',
         playlistTracks: []
